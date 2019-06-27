@@ -16,6 +16,8 @@ module 包含多个 package , go.mod 记录 module path, import path, dependency
 - `go mod vendor` : 将所有依赖包下载到 vendor 目录下。
 - `go build -mod=vendor` : 会使用本地顶级目录下的 vendor 下的依赖包。
 
+如果被墙了，设置 GOPROXY 环境变量使用代理即可 `export GOPROXY=https://goproxy.io` .
+
 #### package names
 包名应该简单明了，全小写，不带下划线，不允许大小写混合。
 熟悉的部分可以缩写，但如果缩写造成表达的意义不明确则应该避免这样做。
