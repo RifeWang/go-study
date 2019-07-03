@@ -18,6 +18,14 @@ module 包含多个 package , go.mod 记录 module path, import path, dependency
 
 如果被墙了，设置 GOPROXY 环境变量使用代理即可 `export GOPROXY=https://goproxy.io` .
 
+
+### go build
+
+`go build -o <output> <input>`: `go build -o bin/mybinfile os/os.go` 以当前路径为基准，编译 os 目录下的 os.go ，输出目录为 bin , 可执行文件为 m 。
+
+交叉编译：通过环境变量 GOOS , GOARCH 分别指定目标环境的操作系统及架构。https://golang.org/doc/install/source#environment 。
+`GOOS=linux GOARCH=amd64 go build -o bin/mybinfile os/os.go`
+
 #### package names
 包名应该简单明了，全小写，不带下划线，不允许大小写混合。
 熟悉的部分可以缩写，但如果缩写造成表达的意义不明确则应该避免这样做。
