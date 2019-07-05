@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func main()  {
+func main() {
 	// 命令行参数 -f
 	f := flag.String("f", "default value", "usage commend")
 

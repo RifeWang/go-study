@@ -10,20 +10,24 @@ import (
 type I interface {
 	M()
 }
+
 // T ...
 type T struct {
 	S string
 }
+
 // M ...
 func (t *T) M() {
-	if t == nil {  // 方法的 receiver 可以是 nil
+	if t == nil { // 方法的 receiver 可以是 nil
 		fmt.Println("<nil>")
 		return
 	}
 	fmt.Println(t.S)
 }
+
 // F ...
 type F float64
+
 // M ...
 func (f F) M() {
 	fmt.Println(f)
@@ -34,10 +38,11 @@ type Person struct {
 	Name string
 	Age  int
 }
+
 /* 最普遍的是 fmt 包的 Stringer 接口
-	type Stringer interface {
-		String() string
-	} 
+type Stringer interface {
+	String() string
+}
 */
 // 实现 String() 方法，控制打印行为
 func (p Person) String() string {
@@ -49,6 +54,7 @@ type MyError struct {
 	When time.Time
 	What string
 }
+
 // 自定义 Error 方法
 func (e *MyError) Error() string {
 	return fmt.Sprintf("at %v, %s",
@@ -61,7 +67,7 @@ func run() error {
 	}
 }
 
-/* 
+/*
 	接口是一种特殊类型，只要实现了接口的所有函数就实现了该接口
 	接口具有：值、值类型、方法
 */
@@ -73,9 +79,9 @@ func main() {
 	var t *T
 	i = t
 	describe(i)
-	i.M()  // receiver 是 nil
+	i.M() // receiver 是 nil
 
-	i = &T{"Hello"}  // 接口类型赋值
+	i = &T{"Hello"} // 接口类型赋值
 	describe(i)
 	i.M()
 
@@ -84,7 +90,7 @@ func main() {
 	ss, ok := i.(*T)
 	fmt.Println(ss, ok)
 
-	i = F(math.Pi)  // 接口类型赋值
+	i = F(math.Pi) // 接口类型赋值
 	describe(i)
 	i.M()
 
@@ -95,7 +101,7 @@ func main() {
 
 	ei = 42
 	describer2(ei)
-	
+
 	ei = "hello"
 	describer2(ei)
 
@@ -107,7 +113,6 @@ func main() {
 	do(21)
 	do("hello")
 	do(true)
-
 
 	// ------------------------------
 	// 实现自定义 String() 方法，控制打印行为
