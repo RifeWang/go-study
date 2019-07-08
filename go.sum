@@ -1,2 +1,4 @@
+github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZpNwpA=
+github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 gocv.io/x/gocv v0.20.0 h1:2q75zQ8Zel2tB69G6qrmf/E7EdvaCs90qvkHzdSBOAg=
 gocv.io/x/gocv v0.20.0/go.mod h1:vZETJRwLnl11muQ6iL3q4ju+0oJRrdmYdv5xJTH7WYA=
