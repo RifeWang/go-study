@@ -1,7 +1,8 @@
 package main
 
 import (
-	// "encoding/json"
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -12,9 +13,9 @@ func main() {
 	// 构造客户端
 	client := &http.Client{}
 
-	// 构造请求数据
+	// 构造请求数据，针对 application/x-www-form-urlencoded
 	body := url.Values{}
-    body.Set("name", string("++=="))
+	body.Set("name", string("++=="))
 	body.Set("password", string("123456"))
 	fmt.Println("req body: ", body, body.Encode())
 
@@ -26,4 +27,20 @@ func main() {
 	res, err := client.Do(req)
 	fmt.Println("response: ", res, err)
 
+	// --------------------------------------
+	// --------------------------------------
+	// 针对 application/json
+	reqBody := new(bytes.Buffer)
+	json.NewEncoder(reqBody).Encode(struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}{"++==", "123456"})
+
+	// 构造 request 请求，注意 body 编码
+	req2, _ := http.NewRequest("PATCH", "http://localhost:4001/test", resBody)
+	req.Header.Add("Content-Type", "application/json")
+
+	// 客户端发起请求
+	res2, err := client.Do(req2)
+	fmt.Println("response2: ", res2, err)
 }

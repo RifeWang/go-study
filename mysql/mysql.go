@@ -32,7 +32,6 @@ func main() {
 	}
 	defer rows.Close()
 
-	
 	for rows.Next() {
 		// user := new(Users)  // 不得使用 new
 		user := Users{}
