@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -25,6 +26,7 @@ func main() {
 
 	// 客户端发起请求
 	res, err := client.Do(req)
+	defer res.Body.Close() // 必须关闭，避免内存泄漏
 	fmt.Println("response: ", res, err)
 
 	// --------------------------------------
@@ -42,5 +44,31 @@ func main() {
 
 	// 客户端发起请求
 	res2, err := client.Do(req2)
+	defer res2.Body.Close() // 必须关闭，避免内存泄漏
 	fmt.Println("response2: ", res2, err)
+
+	// --------------------------------------
+	// --------------------------------------
+	// response body 是 io.ReadCloser 接口类型，包含基本的 Read 和 Close 方法
+	robots, err := ioutil.ReadAll(res2.Body) // []byte, error
+	if err != nil {
+		fmt.Println("read response body err: ", err)
+		return
+	}
+
+	result := Result{}
+	err = json.Unmarshal(robots, &result) // json 解码
+	if err != nil {
+		fmt.Println("json unmarshal response body err: ", err)
+		return
+	}
+}
+
+// Result ... response body struct
+type Result struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Body    struct {
+		Data []string `json:"data"`
+	}
 }
