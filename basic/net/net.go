@@ -26,6 +26,9 @@ func main() {
 
 	// 客户端发起请求
 	res, err := client.Do(req)
+	if err != nil {
+		return
+	}
 	defer res.Body.Close() // 必须关闭，避免内存泄漏
 	fmt.Println("response: ", res, err)
 
@@ -39,11 +42,14 @@ func main() {
 	}{"++==", "123456"})
 
 	// 构造 request 请求，注意 body 编码
-	req2, _ := http.NewRequest("PATCH", "http://localhost:4001/test", resBody)
+	req2, _ := http.NewRequest("PATCH", "http://localhost:4001/test", reqBody)
 	req.Header.Add("Content-Type", "application/json")
 
 	// 客户端发起请求
 	res2, err := client.Do(req2)
+	if err != nil {
+		return
+	}
 	defer res2.Body.Close() // 必须关闭，避免内存泄漏
 	fmt.Println("response2: ", res2, err)
 
