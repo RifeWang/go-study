@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/go-redis/redis"
 )
 
@@ -38,4 +40,19 @@ func main() {
 	} else {
 		fmt.Println("missing_key", val2)
 	}
+
+	// -----------------------
+	Redis.SAdd("setkey", "all")
+	Redis.SAdd("setkey", 1, 2)
+	Redis.SAdd("setkey", []string{"2", "3", "4", "5"})
+	Redis.SRem("setkey", []string{"1", "2"})
+	isMember, err := Redis.SIsMember("setkey", "2").Result()
+	if err != nil {
+		panic(err)
+	}
+	members, err := Redis.SMembers("setkey").Result()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(isMember, members, strings.Join(members, ","))
 }
