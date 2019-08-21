@@ -1,0 +1,39 @@
+syntax = "proto3"; // 声明版本
+
+package grpc; // 自定义包名
+
+message ReqBody { // message 使用驼峰命名，字段使用下划线分隔命名
+  string user_id = 1; // 依次分配字段编号
+  int32 page = 2;
+  int32 pagesize = 3;
+}
+
+message UserOrders {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string phone = 4;
+
+  message Order { // 消息嵌套
+    int32 order_id = 1;
+    string info = 2;
+
+    enum Status { // 枚举类型，命名使用驼峰，枚举值使用大写带下划线
+      SATAUS_INITIAL = 0; // 枚举类型必须从 0 开始编号
+      SATAUS_SUCCESS = 1;
+      SATAUS_FAIL = 2;
+    }
+
+    Status status = 3;
+  }
+
+  repeated Order orders = 5; // repeated 表示此字段有多个
+}
+
+service RPCService {                                 // 定义服务
+  rpc QueryUserOrders(ReqBody) returns (UserOrders); // 定义方法及输入输出
+}
+
+// 注意不要使用 proto2 过时的东西，包括：
+//    - Required fields
+//    - Groups
