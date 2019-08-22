@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	m "github.com/RifeWang/go-study/rpc/grpc"
+	m "gomod/rpc/grpc" // 注意导入正确的路径
 	"google.golang.org/grpc"
 )
 
@@ -18,15 +18,18 @@ func init() {
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	RPCClient = m.NewRPCServiceClient(conn)
+	RPCClient = m.NewRPCServiceClient(conn) // 生成 gRPC 客户端
 }
 
 func main() {
+	// 构造请求数据
 	req := &m.ReqBody{
-		UserId:   "222",
+		UserId:   "uuid-222",
 		Page:     1,
 		Pagesize: 10,
 	}
+
+	// 客户端发起请求
 	res, err := RPCClient.QueryUserOrders(context.Background(), req)
 	if err != nil {
 		log.Println("rpc call error:", err)
