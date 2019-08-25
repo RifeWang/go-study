@@ -1,4 +1,4 @@
-module github.com/RifeWang/go-study
+module gomod
 
 go 1.12
 

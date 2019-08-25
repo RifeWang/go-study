@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	m "gomod/rpc/grpc" // 注意导入正确的路径
+	m "gomod/rpc/grpc" // 导入 protoc 编译生成的代码包
 	"google.golang.org/grpc"
 )
 

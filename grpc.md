@@ -1,6 +1,8 @@
 ## protocol buffers
 google 成熟的开源机制，用于对结构化数据进行序列化或反序列化。
 
+注意：protocol buffers 不使用于大数据集，如果单条消息超过 1 MB ，则需要考虑其他替代方案。
+
 1、在 `.proto` 后缀的文件中定义数据结构，数据被定义为 `message`：
 ```
 message Person {
