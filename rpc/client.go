@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	m "gomod/rpc/grpc" // 导入 protoc 编译生成的代码包
 	"google.golang.org/grpc"
@@ -30,7 +31,9 @@ func main() {
 	}
 
 	// 客户端发起请求
-	res, err := RPCClient.QueryUserOrders(context.Background(), req)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second) // 设置 1s 超时
+	defer cancel()
+	res, err := RPCClient.QueryUserOrders(ctx, req)
 	if err != nil {
 		log.Println("rpc call error:", err)
 	}

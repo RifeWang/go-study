@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"crypto/hmac"
 	"crypto/sha256"
+	"fmt"
 	"io"
 )
 
@@ -12,12 +12,12 @@ var (
 )
 
 func getHmac(s string) string {
-    h := hmac.New(sha256.New, hmacSecret)
+	h := hmac.New(sha256.New, hmacSecret)
 	io.WriteString(h, s)
-    return fmt.Sprintf("%x", h.Sum(nil))
+	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-func main()  {
+func main() {
 	c := getHmac("username")
-    fmt.Println(c)
+	fmt.Println(c)
 }

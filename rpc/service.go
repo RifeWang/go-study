@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	m "gomod/rpc/grpc" // 导入 protoc 编译生成的代码包
+
 	"google.golang.org/grpc"
 )
 
@@ -15,6 +17,8 @@ type srv struct{}
 
 func (s *srv) QueryUserOrders(ctx context.Context, req *m.ReqBody) (*m.UserOrders, error) {
 	fmt.Println("receive req:", req) // 请求数据
+
+	time.Sleep(10 * time.Second)
 
 	// 构造返回数据
 	result := &m.UserOrders{}
