@@ -15,4 +15,5 @@ require (
 	github.com/onsi/gomega v1.5.0 // indirect
 	gocv.io/x/gocv v0.20.0
 	google.golang.org/grpc v1.23.0
+	gopkg.in/olivere/elastic.v5 v5.0.82
 )
