@@ -69,7 +69,6 @@ https://docs.influxdata.com/influxdb/v1.7/concepts/insights_tradeoffs/
 
 # 数据格式设计
 
-## 好的设计
 Tags 会被索引，fields 不会索引，tags 查询性能更高。
 - 常用的查询数据存储为 tags
 - 计划使用 `GROUP BY()` 的数据存储为 tags
@@ -78,4 +77,59 @@ Tags 会被索引，fields 不会索引，tags 查询性能更高。
 
 避免使用 InfluxQL keywords 作为识别名称
 
-## 不好的设计
+- 不要有大量的 series : 使用 UUID, hash, 随机字符串的 tags 将会导致数量庞大的 series，这也是导致高内存使用率的主要因素。如果系统内存有限制，对于大基数 series 应该使用 field
+- measurement 名称不要包含数据，使用不同的 tags 区分数据而不是 measurement 名称
+- 不要在一个 tag 中放置多条信息，拆分有助于简化查询并减少使用正则
+
+### shard group duration
+数据被存放在 shard group 中，shard group 根据 retention policy 进行组织，并使用时间戳存储特定时间间隔内的数据，时间间隔就是 shard group duration 。
+
+默认值：
+RP Duration                 |   Shard Group Duration
+---- | ----
+< 2 days	                |   1 hour
+>= 2 days and <= 6 months   |	1 day
+> 6 months	                |   7 days
+
+Long shard group duration 性能更好，可以存储更大数据在相同的逻辑位置上，这减少了数据重复，提高了压缩效率，并在某些情况下查询更快。
+Short shard group duration 允许系统更有效的丢弃数据并记录增量备份，强制执行 RP 时丢弃的是整个 shard groups 而不是单个数据点。
+
+高吞吐量或长时间运行的实例将受益于使用更长的分片组持续时间。
+建议配置：
+RP Duration	             |   Shard Group Duration
+--- | ----
+<= 1 day	             |   6 hours
+> 1 day and <= 7 days	 |   1 day
+> 7 days and <= 3 months |	 7 days
+> 3 months	             |   30 days
+infinite	             |   52 weeks or longer
+
+- shard group 应该是最频繁查询的最长时间范围的两倍
+- 每个 shard group 应该包含超过 100000 points
+- shard group 每个 series 应该包含超过 1000 points
+
+对数百或数千个分片的并发访问和开销很快就会导致性能降低和内存耗尽，例如大量写入历史数据的情况，强烈建议临时设置较长的 shard group duration 以便创建更少的 shard ，通常 52 周时间比较合适。
+
+# In-memory indexing and the Time-Structured Merge Tree (TSM)
+InfluxDB 为每个时间块创建一个 shard 分片，每个分片映射到一个底层存储引擎数据库，每个数据库有自己独立的 WAL 和 TSM 文件。
+
+### Storage engine
+存储引擎由以下部分组成：
+- In-Memory Index : 跨分片的共享索引，可以快速访问 measurements, tags, series
+- WAL : 写优化存储格式
+- Cache : WAL 数据的缓存，它在运行时查询并与存储在TSM文件中的数据合并。
+- TSM Files : 以列式格式存储压缩系列数据
+- FileStore : 调解对磁盘上所有TSM文件的访问。它确保在替换现有TSM文件时以原子方式安装TSM文件以及删除不再使用的TSM文件。
+- Compactor : 压缩器负责将优化程度较低的Cache和TSM数据转换为更多读取优化的格式。它通过压缩序列，删除已删除的数据，优化索引以及将较小的文件组合成较大的文件来实现。
+- Compaction Planner : 确定哪些TSM文件已准备好进行压缩，并确保多个并发压缩不会相互干扰。
+- Compression: 对于特定数据类型，压缩由各种编码器和解码器处理。有些编码器是相当静态的，并且总是以相同的方式编码相同的类型;其他人根据数据的形状切换压缩策略。
+- Writers/Readers : 每种文件类型（WAL段，TSM文件，逻辑删除等）都有Writers和Readers用于处理格式。
+
+WAL: 一系列的形如 _000001.wal 的文件集合，序号是单调递增的，单个文件就是一个 segment 片段，每个片段 10MB 。写入 WAL 是 `fsync` 并且会添加到 in-memory index ，使用 batch 效率更快，建议 5000 - 10000 points 每个 batch 。
+
+Cache: 缓存 WAL 数据。`cache-snapshot-memory-size` 超出内存大小则刷盘到 TSM 文件并删除对应的 WAL segments ，配合 `cache-snapshot-write-cold-duration` 。`cache-max-memory-size` 超出内存大小会导致 cache 拒绝新的写入。这些配置用来防止内存不足以及客户端写入压力比实例的存储速度更快。
+
+TSM files: 只读文件
+
+# Time Series Index (TSI)
+对于大基数的 series 而言，不可能用 in-memory 存储索引，TSI 可以处理千万级别的 series 。
