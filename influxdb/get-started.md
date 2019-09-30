@@ -21,3 +21,13 @@
 - `SELECT * FROM /.*/ LIMIT 1`
 - `SELECT * FROM "cpu_load_short"`
 - `SELECT * FROM "cpu_load_short" WHERE "value" > 0.9`
+
+暂不支持 count(*) 统计所有数据条数
+
+查询必须有一个非 time field
+
+查询结果 statement 、 series
+
+字段类型
+
+无法 count(time) , 无法 count(tag)

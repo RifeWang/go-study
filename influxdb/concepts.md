@@ -105,8 +105,8 @@ RP Duration	             |   Shard Group Duration
 infinite	             |   52 weeks or longer
 
 - shard group 应该是最频繁查询的最长时间范围的两倍
-- 每个 shard group 应该包含超过 100000 points
-- shard group 每个 series 应该包含超过 1000 points
+- 每个 shard group 应该包含超过 100,000 points
+- shard group 每个 series 应该包含超过 1,000 points
 
 对数百或数千个分片的并发访问和开销很快就会导致性能降低和内存耗尽，例如大量写入历史数据的情况，强烈建议临时设置较长的 shard group duration 以便创建更少的 shard ，通常 52 周时间比较合适。
 
