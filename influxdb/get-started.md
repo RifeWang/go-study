@@ -1,5 +1,11 @@
 确保已经通过 `service influxdb start` 或者 `influxd` 开启了服务。
 
+#### service 配置文件： 
+service: `/etc/init.d/influxdb`,  /var/log/influxdb/influxd.log
+systemd: `/usr/lib/influxdb/scripts/influxdb.service`
+以上两个文件都要修改，一定要注意用户和用户组权限。
+
+### ----
 `influx -precision rfc3339`: 开启命令行，时间精度使用 RFC3339 标准 YYYY-MM-DDTHH:MM:SS.nnnnnnnnnZ
 
 `CREATE DATABASE <db-name>`: 创建数据库
