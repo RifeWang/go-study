@@ -1,9 +1,9 @@
 # 核心概念
 - `database`
-- `retention policy`: measurement 维度数据的保留时间和集群中的副本数，默认 autogen 策略，数据不过期且副本数为1
+- `retention policy`: 数据的保留时间 + 集群中的副本数 + shard duration ，默认 autogen 策略，数据不过期且副本数为1
 - `series`: 一个系列由同一个 retention policy、同一个 measurement、同一个 tag set 组成
 - `point`: 一个点由以下四个部分组成
-- `measurement`
+- `measurement`: 包含 tags, fields, time 的容器
 - `tag set` : `tag key` = `tag value`
 - `field set` : `field key` = `field value`
 - `timestamp`
@@ -13,7 +13,7 @@
 - `batch`
 - `continuous query (CQ)`: 自动定期运行查询，连续查询必须有 `GROUP BY time()`
 - `database`
-- `duration`: 数据存储时长
+- `duration`: RP策略定义的数据存储时长，过期的数据会被删除
 - `field`
 - `field key`
 - `field set`
@@ -28,16 +28,16 @@
 - `point`
 - `points per second`
 - `query`
-- `replication factor`
+- `replication factor`: 数据副本数量，集群模式才有效
 - `retention policy（RP）`
 - `schema`
 - `selector`
 - `series`
 - `series cardinality`
 - `server`
-- `shard`: 每个分片对应一个磁盘上的 TSM 文件，每个分片从属于唯一一个 shard group 
-- `shard duration`
-- `shard group`
+- `shard`: 每个分片存储实际的编码和压缩后的数据，对应一个磁盘上的 TSM 文件。每个分片从属于唯一一个 shard group ，多个 shard 可能存在于一个 shard group 中，每个 shard 包含一组特定的 series 。属于给定分片组中给定系列的所有点都将存储在磁盘上的同一分片（TSM文件）中。
+- `shard duration`: shard group 划分的时间范围。
+- `shard group`: 逻辑上的概念，包含有多个 shard 。
 - `subscription`
 - `tag`
 - `tag key`
