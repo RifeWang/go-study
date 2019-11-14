@@ -165,8 +165,8 @@ tsi1 index 相关：
 [continuous_queries]
 - `enabled = true`
 - `log-enabled = true`
-- `query-stats-enabled = false`
-- `run-interval = "1s"`
+- `query-stats-enabled = false`: CQ 执行的统计信息是否写入默认监控库
+- `run-interval = "1s"`: 检查 CQ 是否需要运行的时间间隔
 
 [tls]
 - `ciphers = ["TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]`
