@@ -13,6 +13,7 @@ require (
 	github.com/nsqio/go-nsq v1.0.7
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
+	github.com/tidwall/gjson v1.3.5
 	gocv.io/x/gocv v0.20.0
 	google.golang.org/grpc v1.23.0
 	gopkg.in/olivere/elastic.v5 v5.0.82
