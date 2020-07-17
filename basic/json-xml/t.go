@@ -63,6 +63,85 @@ const json = `{
     "status": 0
 }`
 
+const esjson = `
+{
+    "took": 142,
+    "timed_out": false,
+    "_shards": {
+      "total": 3,
+      "successful": 3,
+      "skipped": 0,
+      "failed": 0
+    },
+    "hits": {
+      "total": 42538909,
+      "max_score": 1,
+      "hits": [
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20308943",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20308947",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20308957",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20308970",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309002",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309012",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309015",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309030",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309051",
+          "_score": 1
+        },
+        {
+          "_index": "albums",
+          "_type": "doc",
+          "_id": "20309053",
+          "_score": 1
+        }
+      ]
+    }
+  }
+`
+
 func main() {
 	result := gjson.Get(string(json), `result`).Map()
 
@@ -84,4 +163,12 @@ func main() {
 	}
 
 	fmt.Println(deleteCertID, oldest)
+
+	total := gjson.Get(esjson, "hits.total").Int()
+	fmt.Println("es total: ", total)
+
+	_ids := gjson.Get(esjson, "hits.hits.#._id").Array()
+	for _, v := range _ids {
+		fmt.Println(v)
+	}
 }

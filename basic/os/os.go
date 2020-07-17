@@ -23,4 +23,7 @@ func main() {
 	fmt.Println(os.Getwd()) // 当前目录对应的根目录
 	fmt.Println(os.Hostname())
 	fmt.Println(os.UserHomeDir())
+
+	file, err := os.Open("/dev/null")
+	fmt.Println(file, err)
 }

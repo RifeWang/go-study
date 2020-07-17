@@ -15,7 +15,7 @@ func main() {
 
 	flag.Parse()
 
-	fmt.Println(f, *f, port)
+	fmt.Println(*f, port)
 
 	// 执行 go run flag.go -f myflag -port 1234
 	// 使用未定义的命令行 flag 会导致 panic

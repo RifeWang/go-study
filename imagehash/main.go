@@ -7,6 +7,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"os"
+	"strings"
 
 	"github.com/corona10/goimagehash"
 )
@@ -20,6 +21,8 @@ func main() {
 	file6, _ := os.Open("14m.gif")
 	file7, _ := os.Open("24m.gif")
 	file8, _ := os.Open("png.png")
+	test1, _ := os.Open("test.jpg")
+	test2, _ := os.Open("test2.jpeg")
 	// file9, _ := os.Open("error2.jpg") // 存在图片编码异常，无法解码的情况
 	defer file1.Close()
 	defer file2.Close()
@@ -29,6 +32,8 @@ func main() {
 	defer file6.Close()
 	defer file7.Close()
 	defer file8.Close()
+	defer test1.Close()
+	defer test2.Close()
 	// defer file9.Close()
 
 	img1, m, _ := image.Decode(file1)
@@ -42,6 +47,8 @@ func main() {
 
 	img7, m, _ := image.Decode(file7)
 	img8, m, _ := image.Decode(file8)
+	imgtest1, m, _ := image.Decode(test1)
+	imgtest2, m, _ := image.Decode(test2)
 	fmt.Println(m)
 
 	// img9, err := jpeg.Decode(file9)
@@ -57,6 +64,8 @@ func main() {
 	hash6, _ := goimagehash.PerceptionHash(img6)
 	hash7, _ := goimagehash.PerceptionHash(img7)
 	hash8, _ := goimagehash.PerceptionHash(img8)
+	hashtest1, _ := goimagehash.PerceptionHash(imgtest1)
+	hashtest2, _ := goimagehash.PerceptionHash(imgtest2)
 	// hash9, err := goimagehash.PerceptionHash(img9)
 	if err != nil {
 		fmt.Println("=========:", err)
@@ -76,4 +85,7 @@ func main() {
 	// fmt.Println("error2 :               ", hash9.ToString())
 	fmt.Println(hash1.Bits())
 	fmt.Println(hash2.Bits())
+
+	fmt.Println("test jpg:              ", hashtest1.ToString(), strings.Split(hashtest1.ToString(), ":")[1])
+	fmt.Println("test jpg:              ", hashtest2.ToString(), strings.Split(hashtest2.ToString(), ":")[1])
 }
